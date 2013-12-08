@@ -5,6 +5,9 @@
 /* My session ID */
 static uint8_t my_session_id = -1;
 
+/* Error value */
+static int error_num;
+
 /* My callback function for user authentication */
 void cb_receive_user_authenticate(const uint8_t session_id,
         const char *username,
@@ -31,8 +34,6 @@ void cb_receive_connect_terminate(const uint8_t session_id,
 
 int main(void)
 {
-    int error_num;
-
     /* Register basic callback functions */
     vrs_register_receive_user_authenticate(cb_receive_user_authenticate);
     vrs_register_receive_connect_accept(cb_receive_connect_accept);
@@ -40,6 +41,19 @@ int main(void)
 
     /* Send connect request to the server */
     error_num = vrs_send_connect_request("localhost", "12345", 0, &my_session_id);
+
+    /* Was*/
+    if(error_num == VRS_SUCCESS) {
+        /* Never ending loop */
+        while(1) {
+            vrs_callback_update(my_session_id);
+            sleep(1);
+        }
+    }
+
+    if(error_num != VRS_SUCCESS) {
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
