@@ -33,6 +33,11 @@ int main(void)
 {
     int error_num;
 
+    /* Register basic callback functions */
+    vrs_register_receive_user_authenticate(cb_receive_user_authenticate);
+    vrs_register_receive_connect_accept(cb_receive_connect_accept);
+    vrs_register_receive_connect_terminate(cb_receive_connect_terminate);
+
     /* Send connect request to the server */
     error_num = vrs_send_connect_request("localhost", "12345", 0, &my_session_id);
 
